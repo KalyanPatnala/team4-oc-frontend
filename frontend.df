@@ -1,9 +1,22 @@
 FROM ubuntu
+
+# Update package list and install Apache and PHP
 RUN apt update -y
 RUN apt install apache2 -y
+
+# Set non-interactive mode for installing PHP and dependencies
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 RUN apt install sudo php php-mysql libapache2-mod-php -y
+
+# Copy your updated PHP index file to the Apache directory
 COPY index.php /var/www/html/index.php
+
+# Copy the NatWest logo to the Apache web directory
+COPY natwest_logo.png /var/www/html/natwest_logo.png
+
+# Remove the default Apache HTML page
 RUN rm -rf /var/www/html/index.html
+
+# Start Apache server in the foreground
 CMD ["apache2ctl", "-D", "FOREGROUND"]
